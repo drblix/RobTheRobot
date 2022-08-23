@@ -30,10 +30,11 @@ public class Robot : MonoBehaviour
         startingPos = transform.position;
     }
 
-    public IEnumerator BeginTask(Ball ball)
+    public IEnumerator BeginTask(GameObject ball)
     {
         canSpawnBall = false;
 
+        Ball ballClass = ball.GetComponent<Ball>();
         Rigidbody ballRb = ball.GetComponent<Rigidbody>();
         SphereCollider ballCollider = ball.GetComponent<SphereCollider>();
 
@@ -52,7 +53,7 @@ public class Robot : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        agent.SetDestination(ball.ChosenBox.position);
+        agent.SetDestination(ballClass.ChosenBox.position);
 
         yield return new WaitForSeconds(0.1f); // gives a second so agent can calculate remaining distance
         yield return new WaitUntil(() => agent.remainingDistance <= agent.stoppingDistance);
@@ -62,9 +63,9 @@ public class Robot : MonoBehaviour
         ballRb.constraints = RigidbodyConstraints.None;
         ballCollider.enabled = true;
         ball.transform.parent = null;
-        ball.transform.localPosition = ball.ChosenBox.position + new Vector3(0, droppingDistance, 0);
+        ball.transform.localPosition = ballClass.ChosenBox.position + new Vector3(0, droppingDistance, 0);
         ball.GetComponent<AudioSource>().Play();
-        StartCoroutine(ball.Completion());
+        StartCoroutine(ballClass.Completion());
 
         yield return new WaitForSeconds(1f);
 

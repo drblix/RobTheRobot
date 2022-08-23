@@ -51,7 +51,7 @@ public class Ball : MonoBehaviour
 
         meshRenderer.material.color = GetColorFromStr(chosenColor);
 
-        StartCoroutine(robot.BeginTask(this));
+        StartCoroutine(robot.BeginTask(gameObject));
     }
 
     public IEnumerator Completion()
