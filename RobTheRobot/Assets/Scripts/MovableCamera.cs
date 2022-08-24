@@ -10,9 +10,10 @@ public class MovableCamera : MonoBehaviour
     [SerializeField]
     private float mouseSensitivity = 5f;
 
-    private float xRot = 0f;
-
+    [SerializeField]
     private bool camInverted = false;
+
+    private float xRot = 0f;
 
     public bool canMove = true;
 

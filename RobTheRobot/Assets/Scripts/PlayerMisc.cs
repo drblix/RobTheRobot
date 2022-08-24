@@ -1,9 +1,13 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerMisc : MonoBehaviour
 {
     private Robot robot;
     private MovableCamera movableCam;
+
+    [SerializeField]
+    private TextMeshProUGUI methodText;
 
     [SerializeField]
     private Transform ballSpawn;
@@ -37,11 +41,37 @@ public class PlayerMisc : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            if (FindObjectOfType<Ball>() || !robot.canSpawnBall) { return; }
+            if (!robot.CanSpawnBall) { return; }
+
+            foreach (Ball b in FindObjectsOfType<Ball>())
+            {
+                Destroy(b.gameObject);
+            }
 
             GameObject newBall = Instantiate(ballPrefab);
 
             newBall.transform.position = ballSpawn.position;
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            if (!robot.CanSpawnBall) { return; }
+
+            robot.SetPathfinding(!robot.UsePathfinding);
+
+            if (robot.UsePathfinding)
+            {
+                methodText.SetText("M - change method\r\n<size=9>Current method = <b><u>pathfinding</u></b>");
+            }
+            else
+            {
+                methodText.SetText("M - change method\r\n<size=9>Current method = <b><u>manual translation</u></b>");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
     }
 }

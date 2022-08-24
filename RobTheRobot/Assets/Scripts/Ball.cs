@@ -51,16 +51,15 @@ public class Ball : MonoBehaviour
 
         meshRenderer.material.color = GetColorFromStr(chosenColor);
 
-        StartCoroutine(robot.BeginTask(gameObject));
+        if (robot.UsePathfinding)
+        {
+            StartCoroutine(robot.BeginTask(gameObject));
+        }
+        else
+        {
+            StartCoroutine(robot.PerformTranslateInstructions(gameObject));
+        }
     }
-
-    public IEnumerator Completion()
-    {
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
-    }
-
-
 
     #region UtilityFunctions
 
