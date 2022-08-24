@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 public class Robot : MonoBehaviour
 {
@@ -16,11 +17,15 @@ public class Robot : MonoBehaviour
     #region Variables
 
     private NavMeshAgent agent;
+    private Rigidbody robotRb;
 
     private Transform ballHolster;
 
     [SerializeField]
     private Transform[] boxes;
+
+    [SerializeField]
+    private TextMeshProUGUI scoreText;
 
     private Vector3 startingPos;
     private Quaternion startingRot;
@@ -33,11 +38,14 @@ public class Robot : MonoBehaviour
 
     private bool usePathfinding = false;
     public bool UsePathfinding { get { return usePathfinding; } }
+
+    private int deliveredBalls = 0;
     
     #endregion
 
     private void Awake()
     {
+        robotRb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         ballHolster = transform.GetChild(0);
 
@@ -94,6 +102,7 @@ public class Robot : MonoBehaviour
     {
         canSpawnBall = false;
 
+        robotRb.constraints = RigidbodyConstraints.FreezeAll;
         agent.enabled = false;
         transform.position = startingPos;
         transform.rotation = startingRot;
@@ -170,10 +179,10 @@ public class Robot : MonoBehaviour
         transform.Rotate(Vector3.up * -90f);
         // reset back to starting position
 
+        robotRb.constraints = RigidbodyConstraints.None;
         agent.enabled = true;
         canSpawnBall = true;
     }
-    
 
     private void PickupBall(Ball ball, Rigidbody ballRb, SphereCollider ballCollider)
     {
@@ -190,6 +199,9 @@ public class Robot : MonoBehaviour
         ball.transform.parent = null;
         ball.transform.localPosition = ball.ChosenBox.position + new Vector3(0, droppingDistance, 0);
         ball.GetComponent<AudioSource>().Play();
+
+        deliveredBalls++;
+        scoreText.SetText("<b>Successful ball deliveries:</b>\n" + deliveredBalls.ToString());
     }
 
     private bool CompletedCurrentPath()
